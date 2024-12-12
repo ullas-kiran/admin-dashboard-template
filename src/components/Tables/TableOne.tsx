@@ -2,11 +2,14 @@
 import { useEffect, useState } from 'react';
 import { userServices } from '../../services';
 import useCustomNavigate from '../../hooks/useCustomNavigate';
+import Modal from '../../pages/Users/AddUser/Modal';
+
 
 
 const TableOne = () => {
   const [userList,setUserList]=useState<Array<any>>([])
   const navigate=useCustomNavigate();
+  const [showModal, setShowModal] = useState(false);
 
 
   useEffect(()=>{
@@ -33,6 +36,14 @@ console.log(userList);
 const handleNavigate=()=>{
 navigate("/user/add");
 }
+
+const handleUserDetails=(userDetails:any)=>{
+  console.log(userDetails)
+}
+
+console.log("ullas",showModal)
+
+
 
 
   return (
@@ -97,24 +108,25 @@ navigate("/user/add");
               </p>
             </div> */}
 
-            <div className="flex items-center justify-center p-2.5 xl:p-5">
+            <div className="flex items-center justify-center p-2.5 xl:p-5 cursor-pointer" onClick={()=>handleUserDetails(user)}>
               <p className="text-black dark:text-white">{user.name}</p>
             </div>
 
-            <div className="flex items-center justify-center p-2.5 xl:p-5">
+            <div className="flex items-center justify-center p-2.5 xl:p-5 cursor-pointer" onClick={()=>handleUserDetails(user)}>
               <p className="text-black dark:text-white">{user.email}</p>
             </div>
 
-            <div className="hidden items-center justify-center p-2.5 sm:flex xl:p-5">
+            <div className="hidden items-center justify-center p-2.5 sm:flex xl:p-5 cursor-pointer" onClick={()=>handleUserDetails(user)}>
               <p className="text-black dark:text-white">{user?.is_active}</p>
             </div>
 
-            <div className="hidden items-center justify-center p-2.5 sm:flex xl:p-5">
+            <div className="hidden items-center justify-center p-2.5 sm:flex xl:p-5 cursor-pointer" onClick={()=>handleUserDetails(user)}>
               <p className="text-black dark:text-white">{user.updated_at}</p>
             </div>
           </div>
         ))}
       </div>
+      {showModal&&<Modal open={showModal} setShowModal={setShowModal} />}
     </div>
   );
 };

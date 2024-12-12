@@ -1,43 +1,88 @@
 
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
+import { userServices } from '../../../services';
 
 const AddUser = () => {
   // Validation schema using Yup
   const validationSchema = Yup.object({
-    firstName: Yup.string()
+    name: Yup.string()
       .min(2, 'Too Short!')
       .max(50, 'Too Long!')
-      .required('First name is required'),
-    lastName: Yup.string()
-      .min(2, 'Too Short!')
-      .max(50, 'Too Long!')
-      .required('Last name is required'),
+      .required('Name is required'),
     email: Yup.string()
       .email('Invalid email address')
       .required('Email is required'),
     password: Yup.string()
       .min(8, 'Password must be at least 8 characters long')
       .required('Password is required'),
-    message: Yup.string()
-      .max(500, 'Message must be less than 500 characters')
-      .required('Message is required'),
-    file: Yup.mixed().required('File is required'),
+    description: Yup.string()
+      .max(500, 'Job Descriptions must be less than 500 characters')
+      .required('Job Description is required'),
+      question: Yup.string()
+      .max(500, 'Questions must be less than 500 characters')
+      .required('Questions is required'),
+    file: Yup.mixed().required('File is required').test(
+      'fileType',
+      'Only PDF files are allowed',
+      (value) => {
+        if (!value) return false; 
+        const file = value as File; 
+        return file.type === 'application/pdf';
+      }
+    )
+    .test(
+      'fileSize',
+      'File size must be less than 1 MB',
+      (value) => {
+        if (!value) return false; 
+        const file = value as File; 
+        return file.size <= 1024 * 1024; 
+      }
+    ),
   });
 
   // Initial form values
   const initialValues = {
-    firstName: '',
-    lastName: '',
+    name: '',
     email: '',
     password: '',
-    message: '',
+    description: '',
+    question:'',
     file: null,
   };
 
   // Form submission handler
   const handleSubmit = (values:any) => {
     console.log('Form values:', values);
+    userServices
+      .userRegister({
+        name: values.name,
+        password: values.password,
+        email: values.email,
+      })
+      .then((userRes) => {
+        // const formData = new FormData();
+        // formData.append('file', values.file);
+        // userServices
+        //   .uploadResume({
+        //     user_id: userRes.data?.id,
+        //     file: formData,
+        //   })
+        //   .then((res2) => {
+        //     console.log('res2', res2);
+        //     userServices.uploadDocs({
+        //       key:"jd",
+        //       question:values?.question
+        //     })
+        //   })
+        //   .catch((err) => {
+        //     console.log('err2', err);
+        //   });
+      })
+      .catch((err) => {
+        console.log('err1', err);
+      });
   };
 
   return (
@@ -45,7 +90,7 @@ const AddUser = () => {
       <div className="flex flex-col gap-9">
         <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
           <div className="border-b border-stroke py-4 px-6.5 dark:border-strokedark">
-            <h3 className="font-medium text-black dark:text-white">Contact Form</h3>
+            <h3 className="font-medium text-black dark:text-white">Add User</h3>
           </div>
 
           <Formik
@@ -56,40 +101,23 @@ const AddUser = () => {
             {({ setFieldValue }) => (
               <Form>
                 <div className="p-6.5">
-                  <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
-                    <div className="w-full xl:w-1/2">
+                  <div className="mb-4.5 ">
+            
                       <label className="mb-2.5 block text-black dark:text-white">
-                        First name
+                        Name
                       </label>
                       <Field
-                        name="firstName"
+                        name="name"
                         type="text"
-                        placeholder="Enter your first name"
+                        placeholder="Enter your  name"
                         className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                       />
                       <ErrorMessage
-                        name="firstName"
+                        name="name"
                         component="div"
                         className="text-meta-1 mt-1 text-sm"
                       />
-                    </div>
-
-                    <div className="w-full xl:w-1/2">
-                      <label className="mb-2.5 block text-black dark:text-white">
-                        Last name
-                      </label>
-                      <Field
-                        name="lastName"
-                        type="text"
-                        placeholder="Enter your last name"
-                        className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
-                      />
-                      <ErrorMessage
-                        name="lastName"
-                        component="div"
-                        className="text-meta-1 mt-1 text-sm"
-                      />
-                    </div>
+          
                   </div>
 
                   <div className="mb-4.5">
@@ -125,20 +153,37 @@ const AddUser = () => {
                       className="text-meta-1 mt-1 text-sm"
                     />
                   </div>
-
                   <div className="mb-6">
                     <label className="mb-2.5 block text-black dark:text-white">
-                      Message
+                      Job Description
                     </label>
                     <Field
-                      name="message"
+                      name="description"
                       as="textarea"
                       rows={6}
                       placeholder="Type your message"
                       className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                     />
                     <ErrorMessage
-                      name="message"
+                      name="description"
+                      component="div"
+                      className="text-meta-1 mt-1 text-sm"
+                    />
+                  </div>
+
+                  <div className="mb-6">
+                    <label className="mb-2.5 block text-black dark:text-white">
+                      Question
+                    </label>
+                    <Field
+                      name="question"
+                      as="textarea"
+                      rows={6}
+                      placeholder="Type your message"
+                      className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                    />
+                    <ErrorMessage
+                      name="question"
                       component="div"
                       className="text-meta-1 mt-1 text-sm"
                     />
@@ -146,7 +191,7 @@ const AddUser = () => {
 
                   <div className="mb-6">
                     <label className="mb-3 block text-black dark:text-white">
-                      Attach file
+                      Attach Resume
                     </label>
                     <input
                       type="file"
