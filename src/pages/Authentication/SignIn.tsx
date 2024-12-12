@@ -1,11 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import LogoDark from '../../images/logo/logo-dark.svg';
 import Logo from '../../images/logo/logo.svg';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import useCustomNavigate from '../../hooks/useCustomNavigate';
+import { toast } from "react-toastify";
+import { loginService } from '../../services';
+import { AxiosError } from 'axios';
 
 const SignIn: React.FC = () => {
   const initialValues = {
@@ -19,13 +21,27 @@ const SignIn: React.FC = () => {
       .required('Email is required'),
     password: Yup.string()
       .min(6, 'Password must be at least 6 characters')
-      .matches(/[A-Z]/, 'Password must contain at least one capital letter')
       .required('Password is required'),
   });
 
-  const handleSubmit = (values: any) => {
+  const handleSubmit = async(values: any) => {
     console.log('Form Data', values);
-    navigate('/dashboard')
+    
+    try {     
+      const response=await loginService.login({username:values.email,password:values.password})
+      if(response?.data?.access_token){
+        navigate('/dashboard');
+        toast.success("Login successfully");
+      }
+    } catch (error) {
+      if (error instanceof AxiosError && error.response?.data) {
+        const data = error.response.data as { detail: string };
+        toast.error(data.detail);
+      } else {
+        console.log(error);
+        toast.error("An unexpected error occurred");
+      }
+    }
   };
   return (
     <>

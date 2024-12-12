@@ -1,5 +1,15 @@
 import {setupInterceptorsTo} from "./interceptors";
 import axios from "axios";
+declare global {
+  interface ImportMetaEnv {
+    readonly VITE_API_BASE_URL: string;
+  }
+  interface ImportMeta {
+    readonly env: ImportMetaEnv;
+  }
+}
+
+const baseURL = import.meta.env.VITE_API_BASE_URL;
 
 // global instance
 // setupInterceptorsTo(axios);
@@ -7,10 +17,11 @@ import axios from "axios";
 
 // for specific
 const axiosInstance =axios.create({
-    baseURL: "https://api.example.com", // Replace with your API base URL
+    baseURL: baseURL, // Replace with your API base URL
     timeout: 10000, 
     headers: {
-      "Content-Type": "application/json",
+      'Accept': 'application/json',
+      'Content-Type': 'application/x-www-form-urlencoded',
     },
 }) 
 setupInterceptorsTo(axiosInstance);

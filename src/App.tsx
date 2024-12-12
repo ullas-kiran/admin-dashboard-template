@@ -23,7 +23,8 @@ function App() {
   }, [pathname]);
 
   useEffect(() => {
-    setTimeout(() => setLoading(false), 1000);
+    const timeoutId=setTimeout(() => setLoading(false), 1000);
+    return () => clearTimeout(timeoutId);
   }, []);
 
   return loading ? (
