@@ -30,6 +30,7 @@ const SignIn: React.FC = () => {
     try {     
       const response=await loginService.login({username:values.email,password:values.password})
       if(response?.data?.access_token){
+        localStorage.setItem('accessToken',response?.data?.access_token);
         navigate('/dashboard');
         toast.success("Login successfully");
       }
