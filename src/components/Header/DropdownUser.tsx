@@ -1,10 +1,29 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import ClickOutside from '../ClickOutside';
 import UserOne from '../../images/user/user-01.png';
+// import { userServices } from '../../services';
 
 const DropdownUser = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  // useEffect(()=>{
+  //   const controller= new AbortController
+  //   const signal=controller.signal
+
+  //   const fetchCurrentUser=async()=>{
+  //      const response = await userServices.currentUser(signal);
+  //      console.log("res",response)
+  //      try {
+        
+  //      } catch (error) {
+        
+  //      }
+  //   }
+
+  //   fetchCurrentUser()
+  
+  
+  // },[])
 
   return (
     <ClickOutside onClick={() => setDropdownOpen(false)} className="relative">

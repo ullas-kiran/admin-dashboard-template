@@ -20,8 +20,7 @@ const axiosInstance =axios.create({
     baseURL: baseURL, // Replace with your API base URL
     timeout: 10000, 
     headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Type': 'application/json',
     },
 }) 
 setupInterceptorsTo(axiosInstance);
