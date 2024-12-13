@@ -132,8 +132,12 @@ const visibleUsers = userList.slice(startIndex, startIndex + itemsPerPage);
          {user?.is_schedule? <button
           className="bg-primary hover:bg-opacity-90  text-gray font-semibold py-2 px-4 border border-gray-400 outline-none rounded shadow"
         >
-          Shedule Interview
-        </button>:null}
+           Schedule Interview
+        </button>: <button disabled
+          className="bg-white text-gray-800 font-semibold py-2 px-4 border border-gray-400 outline-none rounded shadow"
+        >
+          Scheduled
+        </button>}
           </div>
         </div>
       ))}
