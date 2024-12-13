@@ -34,7 +34,6 @@ const TableOne = () => {
    
   },[])
 
-console.log(userList);
 const handleNavigate=()=>{
 navigate("/user/add");
 }
@@ -48,22 +47,22 @@ const handleUserDetails=(userDetails:any)=>{
 const [currentPage, setCurrentPage] = useState<number>(1);
 const itemsPerPage = 5; // Define how many rows to display per page
 
-const totalPages = Math.ceil(userList.length / itemsPerPage);
+const totalPages:number = Math.ceil(userList.length / itemsPerPage);
 
-const handleNextPage = () => {
+const handleNextPage = ():void => {
   if (currentPage < totalPages) {
     setCurrentPage(currentPage + 1);
   }
 };
 
-const handlePrevPage = () => {
+const handlePrevPage = ():void => {
   if (currentPage > 1) {
     setCurrentPage(currentPage - 1);
   }
 };
 
 // Get the items for the current page
-const startIndex = (currentPage - 1) * itemsPerPage;
+const startIndex:number = (currentPage - 1) * itemsPerPage;
 const visibleUsers = userList.slice(startIndex, startIndex + itemsPerPage);
 
 
@@ -109,7 +108,6 @@ const visibleUsers = userList.slice(startIndex, startIndex + itemsPerPage);
     {/* Table Body */}
     <div
       className="table-fixed"
-      style={{ height: "300px" /* Set desired height */, overflow: "hidden" }}
     >
       {visibleUsers.map((user) => (
         <div
@@ -127,6 +125,14 @@ const visibleUsers = userList.slice(startIndex, startIndex + itemsPerPage);
           </div>
           <div className="hidden items-center justify-center p-2.5 sm:flex xl:p-5 cursor-pointer" onClick={() => handleUserDetails(user)}>
             <p className="text-black dark:text-white">{formatDate(user.updated_at)}</p>
+          </div>
+          <div className="hidden items-center justify-center p-2.5 sm:flex xl:p-5 cursor-pointer" onClick={() => handleUserDetails(user)}>
+          <button
+          className="bg-primary hover:bg-opacity-90  text-gray font-semibold py-2 px-4 border border-gray-400 outline-none rounded shadow"
+          onClick={handleNavigate}
+        >
+          Shedule Interview
+        </button>
           </div>
         </div>
       ))}
