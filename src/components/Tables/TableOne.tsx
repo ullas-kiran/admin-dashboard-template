@@ -1,5 +1,5 @@
 
-import { useEffect, useState } from 'react';
+import { MouseEvent, useEffect, useState } from 'react';
 import { userServices } from '../../services';
 import useCustomNavigate from '../../hooks/useCustomNavigate';
 import Modal from '../../pages/Users/AddUser/Modal';
@@ -34,7 +34,9 @@ const TableOne = () => {
    
   },[])
 
-const handleNavigate=()=>{
+const handleNavigate=(e:MouseEvent<HTMLButtonElement>):void=>{
+  e.preventDefault();
+  e.stopPropagation();
 navigate("/user/add");
 }
 
@@ -101,7 +103,7 @@ const visibleUsers = userList.slice(startIndex, startIndex + itemsPerPage);
         <h5 className="text-sm font-medium uppercase xsm:text-base">DATE</h5>
       </div>
       <div className="hidden p-2.5 text-center sm:block xl:p-5">
-        <h5 className="text-sm font-medium uppercase xsm:text-base">Conversion</h5>
+        <h5 className="text-sm font-medium uppercase xsm:text-base">Status</h5>
       </div>
     </div>
 
@@ -126,13 +128,12 @@ const visibleUsers = userList.slice(startIndex, startIndex + itemsPerPage);
           <div className="hidden items-center justify-center p-2.5 sm:flex xl:p-5 cursor-pointer" onClick={() => handleUserDetails(user)}>
             <p className="text-black dark:text-white">{formatDate(user.updated_at)}</p>
           </div>
-          <div className="hidden items-center justify-center p-2.5 sm:flex xl:p-5 cursor-pointer" onClick={() => handleUserDetails(user)}>
-          <button
+          <div className="hidden items-center justify-center p-2.5 sm:flex xl:p-5 cursor-pointer">
+         {user?.is_schedule? <button
           className="bg-primary hover:bg-opacity-90  text-gray font-semibold py-2 px-4 border border-gray-400 outline-none rounded shadow"
-          onClick={handleNavigate}
         >
           Shedule Interview
-        </button>
+        </button>:null}
           </div>
         </div>
       ))}
