@@ -10,6 +10,7 @@ const TableOne = () => {
   const [userList,setUserList]=useState<Array<any>>([])
   const navigate=useCustomNavigate();
   const [showModal, setShowModal] = useState(false);
+  const [userData,setUserData]=useState(null)
 
 
   useEffect(()=>{
@@ -38,10 +39,10 @@ navigate("/user/add");
 }
 
 const handleUserDetails=(userDetails:any)=>{
-  console.log(userDetails)
+  setUserData(userDetails)
+  setShowModal(true)
 }
 
-console.log("ullas",showModal)
 
 
 
@@ -126,7 +127,7 @@ console.log("ullas",showModal)
           </div>
         ))}
       </div>
-      {showModal&&<Modal open={showModal} setShowModal={setShowModal} />}
+      {showModal&&<Modal open={showModal} userData={userData} setShowModal={setShowModal} />}
     </div>
   );
 };

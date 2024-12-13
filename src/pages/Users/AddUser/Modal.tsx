@@ -1,18 +1,10 @@
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-export default function Modal({showModal,setShowModal}:any) {
+import { userServices } from '../../../services';
+import { toast } from 'react-toastify';
+export default function Modal({showModal,setShowModal,userData}:any) {
 
     const validationSchema = Yup.object({
-        name: Yup.string()
-          .min(2, 'Too Short!')
-          .max(50, 'Too Long!')
-          .required('Name is required'),
-        email: Yup.string()
-          .email('Invalid email address')
-          .required('Email is required'),
-        password: Yup.string()
-          .min(8, 'Password must be at least 8 characters long')
-          .required('Password is required'),
         description: Yup.string()
           .max(500, 'Job Descriptions must be less than 500 characters')
           .required('Job Description is required'),
@@ -41,9 +33,6 @@ export default function Modal({showModal,setShowModal}:any) {
     
       // Initial form values
       const initialValues = {
-        name: '',
-        email: '',
-        password: '',
         description: '',
         question:'',
         file: null,
@@ -51,7 +40,40 @@ export default function Modal({showModal,setShowModal}:any) {
     
       // Form submission handler
       const handleSubmit = (values:any) => {
-
+          const formData = new FormData();
+          console.log(values.file)
+        formData.append('user_id',userData?.id)  
+        formData.append('file', values.file);
+        userServices
+          .uploadResume(formData)
+          .then((res2) => {
+            console.log('res2', res2);
+            userServices.uploadDocs({
+              user_id:userData?.id,
+              key:"jd",
+              jd:values?.description
+            }).then((res3)=>{
+              console.log("res3",res3)
+              userServices.uploadDocs({
+                user_id:userData?.id,
+                key:"qns",
+                questions:values?.question
+              }).then((res3)=>{
+                setShowModal(false)
+                toast.success("Uploaded Successfully");
+                console.log("res3",res3)
+              }).catch((err)=>{
+                toast.error("Something went wrong");
+                console.log("err4",err)
+              })
+            })
+            .catch((err)=>{
+              console.log("err3",err)
+            })
+          })
+          .catch((err) => {
+            console.log('err2', err);
+          });
       }
   
   return (
